@@ -1,0 +1,40 @@
+﻿@model IEnumerable<ProductListResponse>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-4">
+            <partial name="_ProductCard" model="@item" />
+        </div>
+    }
+</div>
+
+<ul class="pagination" style="margin-top:20px">
+    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+    {
+        <li class="page-item @(i==ViewBag.CurrentPage ? "active":"")"><a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-catid="@ViewBag.Category">@i</a></li>
+    }
+</ul>
+
+@section Scripts{
+<script>
+    $(document).ready(function () {
+        $('.sepet').on('click', function () {
+            let id = $(this).data('id');
+            $.ajax({
+                url: '/Cart/Add/' + id,
+                type:'GET',
+                dataType: 'json', // Dönen veri tipi
+                success: function (data) {
+                    let data2 = data.split(',');
+                    alertify.success(data2[0]);
+                    $('.tutar').text('Sepetim(' + data2[2]+  ') '+ data2[1]+" TL");
+                }
+            });
+        });
+    });
+</script>
+}
